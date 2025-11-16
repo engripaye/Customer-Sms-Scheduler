@@ -3,6 +3,9 @@ package dev.engripaye.customersmsschedular.service;
 import com.google.api.client.util.Value;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,8 +34,22 @@ public class SmsService {
             body.put("from", senderId);
             body.put("to", toNumber);
             body.put("sms", messageBody);
-            body.put("")
+            body.put("type", "plain");
+            body.put("channel", "generic");
 
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+            // Send SMS via Termii
+            restTemplate.postForObject(smsUrl, request, String.class);
+
+            System.out.println("SMS sent to " + toNumber);
+
+        }catch (Exception e){
+            System.err.println("Failed to send SMS to " + toNumber);
+            e.printStackTrace();
         }
     }
 }
