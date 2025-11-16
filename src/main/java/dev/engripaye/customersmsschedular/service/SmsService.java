@@ -4,25 +4,35 @@ import com.google.api.client.util.Value;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SmsService {
 
-    @Value("${twilio.account.sid}")
-    private String accountSid;
+    @Value("${termii.account.sid}")
+    private String apiKey;
 
-    @Value("${twilio.auth.token}")
-    private String authToken;
+    @Value("${termii.auth.token}")
+    private String senderId;
 
-    @Value("${twilio.phone.number}")
-    private String fromNumber;
+    @Value("${termii.phone.number}")
+    private String smsUrl;
 
+    private final RestTemplate restTemplate = new RestTemplate();
     public void sendSms(String toNumber, String messageBody){
-        Twilio.init(accountSid, authToken);
-        Message.creator(
-                new com.twilio.type.PhoneNumber(toNumber),
-                new com.twilio.type.PhoneNumber(fromNumber),
-                messageBody
-        ).create();
+
+        try {
+            // Build request payload
+            Map<String, Object> body = new HashMap<>();
+            body.put("api_key", apiKey);
+            body.put("from", senderId);
+            body.put("to", toNumber);
+            body.put("sms", messageBody);
+            body.put("")
+
+        }
     }
 }
