@@ -48,5 +48,23 @@ public class GoogleSheetService {
     public void UpdateLastSent(int rowIndex, String date) throws Exception{
         FileInputStream serviceAccountStream = new FileInputStream(serviceAccountPath);
         ServiceAccountCredentials credentials = ServiceAccountCredentials.fromStream(serviceAccountStream);
+        Sheets sheetService = new Sheets.Builder(
+                GoogleNetHttpTransport.newTrustedTransport(),
+                JacksonFactory.getDefaultInstance(),
+                new HttpCredentialsAdapter(credentials)
+        ).setApplicationName("Customer Sms Scheduler").build();
+
+        ValueRange body = new ValueRange().setValues(
+                List.of(List.of(date))
+        );
+
+        // "G" column = Last Sent
+        String cell = "sheet1!G" + rowIndex;
+
+        sheetService.spreadsheets().values()
+                .update(spreadsheetId, cell, body)
+                .setValueInputOption("USER_ENTERED")
+                .execute();
+
     }
 }
