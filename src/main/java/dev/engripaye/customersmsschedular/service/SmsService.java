@@ -51,5 +51,5 @@ public class SmsService {
             System.err.println("Failed to send SMS to " + toNumber);
             e.printStackTrace();
         }
-    } // working on termii application setup
+    } // working on termii application setup : call service
 }
